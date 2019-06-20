@@ -16,11 +16,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, weak) id<CaptureVideoServiceDelegate> delegate;
 
+-(void)takePhoto;
+
 @end
 
 @protocol CaptureVideoServiceDelegate <NSObject>
 
 -(void)captureVideoServiceSampleBuffer:(CMSampleBufferRef)sampleBuffer;
+-(void)captureVideoServicePhotoOutput:(AVCapturePhotoOutput *)output didFinishProcessingPhoto:(AVCapturePhoto *)photo;
 
 @end
 

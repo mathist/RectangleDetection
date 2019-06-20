@@ -13,7 +13,7 @@
 #import "ImageCorrection.h"
 #import "UIImage+Extensions.h"
 
-@interface IDCardFrontViewController () <RectangleServiceDelegate, CaptureVideoServiceDelegate, MotionServiceDelegate,ImageCorrectionDelegate, AVCapturePhotoCaptureDelegate>
+@interface IDCardFrontViewController () <RectangleServiceDelegate, CaptureVideoServiceDelegate, MotionServiceDelegate,ImageCorrectionDelegate>
 
 @property (nonatomic, weak) IBOutlet UILabel *lblStatus;
 @property (nonatomic, weak) IBOutlet UIImageView *imgView;
@@ -21,8 +21,6 @@
 @property (nonatomic, retain) ImageCorrection *imageCorrection;
 @property (nonatomic, retain) CaptureVideoService *captureVideoService;
 @property (nonatomic, retain) RectangleService *rectangleService;
-
-@property (nonatomic, retain) AVCapturePhotoOutput *capturePhotoOutput;
 
 @property (nonatomic, assign) BOOL photoCaptured;
 @property (nonatomic, assign) CGRect boundingBox;
@@ -42,20 +40,6 @@
     
     [self.rectangleService setDelegate:self];
     [self.view.layer addSublayer:self.captureVideoService.captureLayer];
-    
-
-
-    self.capturePhotoOutput = [[AVCapturePhotoOutput alloc] init];
-    
-    [self.capturePhotoOutput setHighResolutionCaptureEnabled:YES];
-    [self.capturePhotoOutput setLivePhotoCaptureEnabled:NO];
-    [self.captureVideoService addOutput:self.capturePhotoOutput];
-    
-    AVCaptureConnection *connection = [self.capturePhotoOutput connectionWithMediaType:AVMediaTypeVideo];
-    AVCaptureVideoOrientation orientation = self.captureVideoService.captureLayer.connection.videoOrientation;
-    if(connection != nil)
-        [connection setVideoOrientation:orientation];
-    
     
     //    [MotionService.shared setDelegate:self];
     
@@ -131,21 +115,10 @@
                 }
                 
                 self.photoCaptured = YES;
+                self.boundingBox = result.boundingBox;
                 
-                NSArray *formats = [self.capturePhotoOutput supportedPhotoPixelFormatTypesForFileType:AVFileTypeTIFF];
-                
-                if (formats.count > 0)
-                {
-                    AVCapturePhotoSettings *photoSettings = [AVCapturePhotoSettings photoSettingsWithFormat:@{(NSString *)kCVPixelBufferPixelFormatTypeKey: formats.firstObject}];
-                
-                    [photoSettings setHighResolutionPhotoEnabled:YES];
-                    [photoSettings setFlashMode:AVCaptureFlashModeOff];
-                    [photoSettings setAutoStillImageStabilizationEnabled:NO];
-                    [photoSettings setHighResolutionPhotoEnabled:YES];
-                    
-                    self.boundingBox = result.boundingBox;
-                    [self.capturePhotoOutput capturePhotoWithSettings:photoSettings delegate:self];
-                }
+                [self.captureVideoService takePhoto];
+
             }
         }
     });
@@ -164,9 +137,7 @@
     [self.rectangleService request:sampleBuffer];
 }
 
-#pragma mark AVCapturePhotoOutputDelegate methods
-
--(void)captureOutput:(AVCapturePhotoOutput *)output didFinishProcessingPhoto:(AVCapturePhoto *)photo error:(NSError *)error
+-(void)captureVideoServicePhotoOutput:(AVCapturePhotoOutput *)output didFinishProcessingPhoto:(AVCapturePhoto *)photo
 {
     [self.captureVideoService stopCamera];
     
@@ -202,7 +173,8 @@
     [self.imgView setImage:jpgImg];
     [self.view bringSubviewToFront:self.imgView];
     
-    UIImageWriteToSavedPhotosAlbum(jpgImg, nil, nil, nil);
+//    UIImageWriteToSavedPhotosAlbum(jpgImg, nil, nil, nil);
+    UIImageWriteToSavedPhotosAlbum(jpgImg, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
 }
 
 
