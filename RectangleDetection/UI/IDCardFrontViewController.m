@@ -34,7 +34,7 @@
     
     self.imageCorrection = [ImageCorrection new];
     [self.imageCorrection setDelegate:self];
-    self.captureVideoService = [[CaptureVideoService alloc] initWithImageCorrection:self.imageCorrection];
+    self.captureVideoService = [[CaptureVideoService alloc] initWithImageCorrection:self.imageCorrection withOptions:kCaptureVideoServiceOptionOutput | kCaptureVideoServiceOptionPhoto];
     [self.captureVideoService setDelegate:self];
     self.rectangleService = [RectangleService new];
     

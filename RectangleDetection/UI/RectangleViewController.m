@@ -25,7 +25,7 @@
 {
     [super viewDidLoad];
     
-    self.captureVideoService = [CaptureVideoService new];
+    self.captureVideoService = [[CaptureVideoService alloc] initWithOptions:kCaptureVideoServiceOptionOutput];
     [self.captureVideoService setDelegate:self];
     self.rectangleService = [RectangleService new];
     

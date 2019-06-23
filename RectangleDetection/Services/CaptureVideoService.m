@@ -14,38 +14,73 @@
 
 @end
 
+
 @interface CaptureVideoService() <AVCaptureVideoDataOutputSampleBufferDelegate,AVCapturePhotoCaptureDelegate>
 
 @property (nonatomic, retain) AVCapturePhotoOutput *capturePhotoOutput;
+@property (nonatomic, assign) CaptureVideoServiceOption options;
 
 @end
 
 
 @implementation CaptureVideoService
 
+
+- (instancetype)initWithImageCorrection:(ImageCorrection *)imageCorrection withOptions:(CaptureVideoServiceOption)options
+{
+    self.options = options;
+    
+    if (!(self = [super initWithImageCorrection:imageCorrection])) return nil;
+
+    return self;
+}
+
+- (instancetype)initWithImageCorrection:(ImageCorrection * _Nullable)imageCorrection withDevicePosition:(AVCaptureDevicePosition)devicePosition withOptions:(CaptureVideoServiceOption)options
+{
+    self.options = options;
+    
+    if (!(self = [super initWithImageCorrection:imageCorrection withDevicePosition:devicePosition])) return nil;
+
+    return self;
+}
+
+- (instancetype)initWithOptions:(CaptureVideoServiceOption)options
+{
+    self.options = options;
+    
+    if (!(self = [super initWithImageCorrection:nil withDevicePosition:AVCaptureDevicePositionBack])) return nil;
+    
+    return self;
+}
+
 -(void)setupService:(AVCaptureDevicePosition)devicePosition
 {
     [super setupService:devicePosition];
     
-    AVCaptureVideoDataOutput *captureOutput = [[AVCaptureVideoDataOutput alloc] init];
+    if (self.options | kCaptureVideoServiceOptionOutput)
+    {
+        AVCaptureVideoDataOutput *captureOutput = [[AVCaptureVideoDataOutput alloc] init];
+        
+        [captureOutput setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
+        [self addOutput:captureOutput];
+        
+        [captureOutput setAlwaysDiscardsLateVideoFrames:YES];
+        [captureOutput setSampleBufferDelegate:self queue:self.sessionQueue];
+    }
     
-    [captureOutput setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
-    [self addOutput:captureOutput];
-    
-    [captureOutput setAlwaysDiscardsLateVideoFrames:YES];
-    [captureOutput setSampleBufferDelegate:self queue:self.sessionQueue];
-    
-    
-    self.capturePhotoOutput = [[AVCapturePhotoOutput alloc] init];
-    
-    [self.capturePhotoOutput setHighResolutionCaptureEnabled:YES];
-    [self.capturePhotoOutput setLivePhotoCaptureEnabled:NO];
-    [self addOutput:self.capturePhotoOutput];
-    
-    AVCaptureConnection *connection = [self.capturePhotoOutput connectionWithMediaType:AVMediaTypeVideo];
-    AVCaptureVideoOrientation orientation = self.captureLayer.connection.videoOrientation;
-    if(connection != nil)
-        [connection setVideoOrientation:orientation];
+    if (self.options | kCaptureVideoServiceOptionPhoto)
+    {
+        self.capturePhotoOutput = [[AVCapturePhotoOutput alloc] init];
+        
+        [self.capturePhotoOutput setHighResolutionCaptureEnabled:YES];
+        [self.capturePhotoOutput setLivePhotoCaptureEnabled:NO];
+        [self addOutput:self.capturePhotoOutput];
+        
+        AVCaptureConnection *connection = [self.capturePhotoOutput connectionWithMediaType:AVMediaTypeVideo];
+        AVCaptureVideoOrientation orientation = self.captureLayer.connection.videoOrientation;
+        if(connection != nil)
+            [connection setVideoOrientation:orientation];
+    }
 
 }
 
