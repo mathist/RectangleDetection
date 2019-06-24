@@ -39,6 +39,7 @@
     }];
 
     request.maximumObservations = 10;
+    request.minimumAspectRatio = 0.3;     //  default 0.5         max default = 1.0     min confidence = 0   quadratureTolerance = 30
     
     VNImageRequestHandler *handler = [[VNImageRequestHandler alloc] initWithCVPixelBuffer:buffer orientation:kCGImagePropertyOrientationRight options:@{}];
     

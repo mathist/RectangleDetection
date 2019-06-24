@@ -48,7 +48,7 @@
 
 -(void)dealloc
 {
-    [MotionService.shared stop];
+//    [MotionService.shared stop];
     [self.rectangleService setDelegate:nil];
     self.rectangleService = nil;
     self.captureVideoService = nil;
@@ -118,7 +118,6 @@
                 self.boundingBox = result.boundingBox;
                 
                 [self.captureVideoService takePhoto];
-
             }
         }
     });

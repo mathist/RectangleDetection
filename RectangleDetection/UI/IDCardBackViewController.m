@@ -7,21 +7,23 @@
 //
 
 #import "IDCardBackViewController.h"
-#import "VideoService.h"
+#import "CaptureVideoService.h"
 #import "RectangleService.h"
 #import "MotionService.h"
 #import "ImageCorrection.h"
+#import "UIImage+Extensions.h"
 
-@interface IDCardBackViewController () <RectangleServiceDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate, MotionServiceDelegate,ImageCorrectionDelegate>
+@interface IDCardBackViewController () <RectangleServiceDelegate, CaptureVideoServiceDelegate, MotionServiceDelegate,ImageCorrectionDelegate>
 
 @property (nonatomic, weak) IBOutlet UILabel *lblStatus;
 
 @property (nonatomic, retain) ImageCorrection *imageCorrection;
-@property (nonatomic, retain) VideoService *videoService;
+@property (nonatomic, retain) CaptureVideoService *captureVideoService;
 @property (nonatomic, retain) RectangleService *rectangleService;
 
-@property (nonatomic, assign) CMSampleBufferRef latestBuffer;
-@property (nonatomic, retain) CIImage *ciImage;
+@property (nonatomic, assign) BOOL photoCaptured;
+@property (nonatomic, assign) BOOL barCodeCaptured;
+@property (nonatomic, assign) CGRect boundingBox;
 
 @end
 
@@ -31,61 +33,49 @@
 {
     [super viewDidLoad];
     
+    self.barCodeCaptured = YES;
+
+    
     self.imageCorrection = [ImageCorrection new];
     [self.imageCorrection setDelegate:self];
-    self.videoService = [[VideoService alloc] initWithImageCorrection:self.imageCorrection];
+    self.captureVideoService = [[CaptureVideoService alloc] initWithImageCorrection:self.imageCorrection withOptions:kCaptureVideoServiceOptionOutput | kCaptureVideoServiceOptionPhoto | kCaptureVideoServiceOptionBarcode];
+    [self.captureVideoService setDelegate:self];
     self.rectangleService = [RectangleService new];
     
     [self.rectangleService setDelegate:self];
-    [self.view.layer addSublayer:self.videoService.captureLayer];
+    [self.view.layer addSublayer:self.captureVideoService.captureLayer];
     
-    AVCaptureVideoDataOutput *captureOutput = [[AVCaptureVideoDataOutput alloc] init];
-    
-    [captureOutput setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
-    [self.videoService addOutput:captureOutput];
-    
-    [captureOutput setAlwaysDiscardsLateVideoFrames:YES];
-    [captureOutput setSampleBufferDelegate:self queue:self.videoService.sessionQueue];
-    
-    
-    AVCaptureMetadataOutput *metaDataCaptureOutput = [[AVCaptureMetadataOutput alloc] init];
-    [self.videoService addOutput:metaDataCaptureOutput];
-
-    [metaDataCaptureOutput setMetadataObjectsDelegate:self queue:self.videoService.sessionQueue];
-    [metaDataCaptureOutput setMetadataObjectTypes:@[AVMetadataObjectTypePDF417Code]];
-
-    
-    [MotionService.shared setDelegate:self];
+//    [MotionService.shared setDelegate:self];
     
     [self.view bringSubviewToFront:self.lblStatus];
 }
 
 -(void)dealloc
 {
-    [MotionService.shared stop];
+//    [MotionService.shared stop];
     [self.rectangleService setDelegate:nil];
     self.rectangleService = nil;
-    self.videoService = nil;
+    self.captureVideoService = nil;
     self.imageCorrection = nil;
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self.videoService startCamera];
+    [self.captureVideoService startCamera];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    [self.videoService stopCamera];
+    [self.captureVideoService stopCamera];
 }
 
 -(void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
     
-    self.videoService.captureLayer.frame = self.view.bounds;
+    self.captureVideoService.captureLayer.frame = self.view.bounds;
 }
 
 #pragma mark RectangleServiceDelegate methods
@@ -123,20 +113,15 @@
             
             if (self.imageCorrection.messages.count == 0)
             {
-                [self.videoService stopCamera];
+                if (self.photoCaptured)
+                {
+                    return;
+                }
                 
-                CGFloat y = result.boundingBox.origin.x * self.ciImage.extent.size.height;
-                CGFloat width = result.boundingBox.size.height * self.ciImage.extent.size.width;
-                CGFloat height = result.boundingBox.size.width * self.ciImage.extent.size.height;
-                CGFloat x = self.ciImage.extent.size.width - (result.boundingBox.origin.y * self.ciImage.extent.size.width) - width;
+                self.photoCaptured = YES;
+                self.boundingBox = result.boundingBox;
                 
-                CIContext *context = [CIContext contextWithOptions:nil];
-                CGImageRef cgImage = [context createCGImage:self.ciImage fromRect:CGRectMake(x, y, width, height)];
-                
-                UIImage *img = [UIImage imageWithCGImage:cgImage scale:1.0 orientation:UIImageOrientationRight];
-                
-                CGImageRelease(cgImage);
-                UIImageWriteToSavedPhotosAlbum(img, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+                [self.captureVideoService takePhoto];
             }
         }
     });
@@ -144,48 +129,66 @@
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo: (void *)contextInfo
 {
+    if(!self.photoCaptured || !self.barCodeCaptured)
+        return;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.navigationController popToRootViewControllerAnimated:YES];
     });
 }
 
-
-#pragma mark AVCaptureVideoDataOutputSampleBufferDelegate methods
--(void)captureOutput:(AVCaptureOutput *)output didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
+#pragma mark CaptureVideoServiceDelegate methods
+-(void)captureVideoServiceSampleBuffer:(CMSampleBufferRef)sampleBuffer
 {
-    CVImageBufferRef buffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-    self.ciImage = [CIImage imageWithCVImageBuffer:buffer];
-    
     [self.rectangleService request:sampleBuffer];
 }
 
-
-#pragma mark AVCaptureMetadataOutputObjectsDelegate
--(void)captureOutput:(AVCaptureOutput *)output didOutputMetadataObjects:(NSArray<__kindof AVMetadataObject *> *)metadataObjects fromConnection:(AVCaptureConnection *)connection
+-(void)captureVideoServicePhotoOutput:(AVCapturePhotoOutput *)output didFinishProcessingPhoto:(AVCapturePhoto *)photo
 {
-//    if(self.isScanned)
-//        return;
-//
-//    if (metadataObjects.count != 1)
-//        return;
-//
-    AVMetadataObject *metadataObject = metadataObjects.firstObject;
+    [self.captureVideoService stopCamera];
+    
+    CIImage *ciImage = [CIImage imageWithCVImageBuffer:photo.pixelBuffer];
+    
+    self.boundingBox = CGRectMake(self.boundingBox.origin.x - .1, self.boundingBox.origin.y - .05, self.boundingBox.size.width + .2, self.boundingBox.size.height + .1);
+    
+    CGFloat y = self.boundingBox.origin.x * ciImage.extent.size.height;
+    CGFloat width = self.boundingBox.size.height * ciImage.extent.size.width;
+    CGFloat height = self.boundingBox.size.width * ciImage.extent.size.height;
+    CGFloat x = ciImage.extent.size.width - (self.boundingBox.origin.y * ciImage.extent.size.width) - width;
+    
+    ciImage = [ciImage imageByCroppingToRect:CGRectMake(x, y, width, height)];
+    
+    NSData *pngData = [[CIContext contextWithOptions:nil] PNGRepresentationOfImage:ciImage format:kCIFormatBGRA8 colorSpace:CGColorSpaceCreateDeviceRGB() options:@{}];
+    UIImage *pngImg = [UIImage imageWithData:pngData scale:1.0];
+    pngImg = [pngImg imageRotatedByDegrees:90];
+
+    UIImageWriteToSavedPhotosAlbum(pngImg, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+}
+
+-(void)captureVideoServiceMetaDataOutput:(NSArray<__kindof AVMetadataObject *> *)metaDataObjects
+{
+    if(self.barCodeCaptured)
+        return;
+    
+    if(metaDataObjects.count != 1)
+        return;
+    
+    AVMetadataObject *metadataObject = metaDataObjects.firstObject;
 
     if (metadataObject.type != AVMetadataObjectTypePDF417Code)
         return;
 
-    for(AVMetadataObject *obj in metadataObjects)
+    for(AVMetadataObject *obj in metaDataObjects)
     {
-//        if(self.isScanned)
-//            return;
-//
-        if([[self.videoService.captureLayer transformedMetadataObjectForMetadataObject:obj] isKindOfClass:[AVMetadataMachineReadableCodeObject class]])
+        if([[self.captureVideoService.captureLayer transformedMetadataObjectForMetadataObject:obj] isKindOfClass:[AVMetadataMachineReadableCodeObject class]])
         {
-//            self.isScanned = YES;
-//
-//            self.scanResults =[(AVMetadataMachineReadableCodeObject *)obj stringValue];
-            NSLog(@"%@", [(AVMetadataMachineReadableCodeObject *)obj stringValue]);
-//
+            self.barCodeCaptured = YES;
+            
+            NSString *scanResults =[(AVMetadataMachineReadableCodeObject *)obj stringValue];
+            NSLog(@"%@", scanResults);
+            
+            [self image:nil didFinishSavingWithError:nil contextInfo:nil];
+            
 //            NTKDispatchMainAsync(^{
 //                NSDictionary *d = [self parseResults:self.scanResults];
 //                if (self.delegate && [self.delegate respondsToSelector:@selector(barCodeControllerDidCompleteWithDictionary:)])
@@ -193,10 +196,8 @@
 //            });
         }
     }
-    
+
 }
-
-
 
 
 #pragma mark MotionServiceDelegate methods

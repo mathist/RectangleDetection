@@ -38,6 +38,7 @@ typedef NS_ENUM (NSInteger, CaptureVideoServiceOption)
 @optional
 -(void)captureVideoServiceSampleBuffer:(CMSampleBufferRef)sampleBuffer;
 -(void)captureVideoServicePhotoOutput:(AVCapturePhotoOutput *)output didFinishProcessingPhoto:(AVCapturePhoto *)photo;
+-(void)captureVideoServiceMetaDataOutput:(NSArray<__kindof AVMetadataObject *>*)metaDataObjects;
 
 @end
 

@@ -15,7 +15,7 @@
 @end
 
 
-@interface CaptureVideoService() <AVCaptureVideoDataOutputSampleBufferDelegate,AVCapturePhotoCaptureDelegate>
+@interface CaptureVideoService() <AVCaptureVideoDataOutputSampleBufferDelegate,AVCapturePhotoCaptureDelegate, AVCaptureMetadataOutputObjectsDelegate>
 
 @property (nonatomic, retain) AVCapturePhotoOutput *capturePhotoOutput;
 @property (nonatomic, assign) CaptureVideoServiceOption options;
@@ -81,7 +81,16 @@
         if(connection != nil)
             [connection setVideoOrientation:orientation];
     }
+    
+    if (self.options | kCaptureVideoServiceOptionBarcode)
+    {
+        AVCaptureMetadataOutput *metaDataCaptureOutput = [[AVCaptureMetadataOutput alloc] init];
+        [self addOutput:metaDataCaptureOutput];
+        
+        [metaDataCaptureOutput setMetadataObjectsDelegate:self queue:self.sessionQueue];
+        [metaDataCaptureOutput setMetadataObjectTypes:@[AVMetadataObjectTypePDF417Code]];
 
+    }
 }
 
 -(void)takePhoto
@@ -114,6 +123,13 @@
 {
     if(!error && self.delegate && [self.delegate respondsToSelector:@selector(captureVideoServicePhotoOutput:didFinishProcessingPhoto:)])
         [self.delegate captureVideoServicePhotoOutput:output didFinishProcessingPhoto:photo];
+}
+
+#pragma mark AVCaptureMetadataOutputObjectsDelegate methods
+-(void)captureOutput:(AVCaptureOutput *)output didOutputMetadataObjects:(NSArray<__kindof AVMetadataObject *> *)metadataObjects fromConnection:(AVCaptureConnection *)connection
+{
+    if(self.delegate && [self.delegate respondsToSelector:@selector(captureVideoServiceMetaDataOutput:)])
+        [self.delegate captureVideoServiceMetaDataOutput:metadataObjects];
 }
 
 @end
