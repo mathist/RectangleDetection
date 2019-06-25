@@ -186,7 +186,9 @@
             
             NSString *scanResults =[(AVMetadataMachineReadableCodeObject *)obj stringValue];
             NSLog(@"%@", scanResults);
-            
+
+            NSDictionary *d = [self parseResults:scanResults];
+
             [self image:nil didFinishSavingWithError:nil contextInfo:nil];
             
 //            NTKDispatchMainAsync(^{
@@ -196,9 +198,148 @@
 //            });
         }
     }
-
 }
 
+
+-(NSDictionary<NSString*,NSString*>*)parseResults:(NSString *)string
+{
+    NSMutableDictionary<NSString*,NSString*> *dict = [[NSMutableDictionary<NSString*,NSString*> alloc] init];
+    NSArray<NSString*> *lines = [string componentsSeparatedByString:@"\n"];
+    
+    NSDictionary<NSString*,NSString*> *prefixes = [self fieldPrefixes];
+    
+    for (int i = 0;i<lines.count;i++)
+    {
+        NSString *l = [lines objectAtIndex:i];
+        
+        l = [l stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
+        if(l.length > 3)
+        {
+            for(NSString *key in prefixes.allKeys)
+            {
+                BOOL found = false;
+                
+                for(NSString *result =  [self findSuffix:key forString:l]; result != nil; result = nil) {
+                    [dict setObject:result forKey:[prefixes objectForKey:key]];
+                    found = true;
+                }
+                if (found)
+                    continue;
+            }
+        }
+    }
+    
+    return dict;
+}
+
+-(NSString *)findSuffix:(NSString *)prefix forString:(NSString *)string
+{
+    NSString *result;
+    
+    if([string hasPrefix:prefix])
+        result = [string substringFromIndex:prefix.length];
+    
+    return result;
+}
+
+-(NSDictionary<NSString*,NSString*> *)fieldPrefixes
+{
+    NSDictionary<NSString*,NSString*> *dict = @{@"DAA" : @"Full Name"
+                                                ,@"DAB" : @"Last Name"
+                                                ,@"DAB" : @"Last Name"
+                                                ,@"DAC" : @"First Name"
+                                                ,@"DAC" : @"First Name"
+                                                ,@"DAD" : @"Middle Name"
+                                                ,@"DAD" : @"Middle Name"
+                                                ,@"DAE" : @"Name Suffix"
+                                                ,@"DAF" : @"Name Prefix"
+                                                ,@"DAG" : @"Mailing Street Address1"
+                                                ,@"DAH" : @"Mailing Street Address2"
+                                                ,@"DAI" : @"Mailing City"
+                                                ,@"DAJ" : @"State"
+                                                ,@"DAK" : @"Mailing Postal Code"
+                                                ,@"DAL" : @"Residence Street Address1"
+                                                ,@"DAM" : @"Residence Street Address2"
+                                                ,@"DAN" : @"Residence City"
+                                                ,@"DAO" : @"Residence Jurisdiction Code"
+                                                ,@"DAP" : @"Mailing Postal Code"
+                                                ,@"DAQ" : @"License or ID Number"
+                                                ,@"DAR" : @"License Classification Code"
+                                                ,@"DAS" : @"License Restriction Code"
+                                                ,@"DAT" : @"License Endorsements Code"
+                                                ,@"DAU" : @"Height in FT_IN"
+                                                ,@"DAV" : @"Height in CM"
+                                                ,@"DAW" : @"Weight in LBS"
+                                                ,@"DAX" : @"Weight in KG"
+                                                ,@"DAY" : @"Eye Color"
+                                                ,@"DAZ" : @"Hair Color"
+                                                ,@"DBA" : @"License Expiration Date"
+                                                ,@"DBB" : @"Date of Birth"
+                                                ,@"DBC" : @"Sex"
+                                                ,@"DBD" : @"License or ID Document Issue Date"
+                                                ,@"DBE" : @"Issue Timestamp"
+                                                ,@"DBF" : @"Number of Duplicates"
+                                                ,@"DBG" : @"Medical Indicator Codes"
+                                                ,@"DBH" : @"Organ Donor"
+                                                ,@"DBI" : @"Non-Resident Indicator"
+                                                ,@"DBJ" : @"Unique Customer Identifier"
+                                                ,@"DBK" : @"Social Security Number"
+                                                ,@"DBL" : @"Date Of Birth"
+                                                ,@"DBM" : @"Social Security Number"
+                                                ,@"DBN" : @"Full Name"
+                                                ,@"DBO" : @"Last Name"
+                                                ,@"DBO" : @"Last Name"
+                                                ,@"DBP" : @"First Name"
+                                                ,@"DBP" : @"First Name"
+                                                ,@"DBQ" : @"Middle Name"
+                                                ,@"DBQ" : @"Middle Name"
+                                                ,@"DBR" : @"Suffix"
+                                                ,@"DBS" : @"Prefix"
+                                                ,@"DCA" : @"Virginia Specific Class"
+                                                ,@"DCB" : @"Virginia Specific Restrictions"
+                                                ,@"DCD" : @"Virginia Specific Endorsements"
+                                                ,@"DCE" : @"Physical Description Weight Range"
+                                                ,@"DCF" : @"Document Discriminator"
+                                                ,@"DCG" : @"Country territory of issuance"
+                                                ,@"DCH" : @"Federal Commercial Vehicle Codes"
+                                                ,@"DCI" : @"Place of birth"
+                                                ,@"DCJ" : @"Audit information"
+                                                ,@"DCK" : @"Inventory Control Number"
+                                                ,@"DCL" : @"Race Ethnicity"
+                                                ,@"DCM" : @"Standard vehicle classification"
+                                                ,@"DCN" : @"Standard endorsement code"
+                                                ,@"DCO" : @"Standard restriction code"
+                                                ,@"DCP" : @"Jurisdiction specific vehicle classification description"
+                                                ,@"DCQ" : @"Jurisdiction-specific"
+                                                ,@"DCR" : @"Jurisdiction specific restriction code description"
+                                                ,@"DCS" : @"Last Name"
+                                                ,@"DCS" : @"Last Name"
+                                                ,@"DCT" : @"First Name"
+                                                ,@"DCT" : @"First Name"
+                                                ,@"DCU" : @"Suffix"
+                                                ,@"DDA" : @"Compliance Type"
+                                                ,@"DDB" : @"Card Revision Date"
+                                                ,@"DDC" : @"HazMat Endorsement Expiry Date"
+                                                ,@"DDD" : @"Limited Duration Document Indicator"
+                                                ,@"DDE" : @"Family Name Truncation"
+                                                ,@"DDF" : @"First Names Truncation"
+                                                ,@"DDG" : @"Middle Names Truncation"
+                                                ,@"DDH" : @"Under 18 Until"
+                                                ,@"DDI" : @"Under 19 Until"
+                                                ,@"DDJ" : @"Under 21 Until"
+                                                ,@"DDK" : @"Organ Donor Indicator"
+                                                ,@"DDL" : @"Veteran Indicator"
+                                                ,@"PAA" : @"Permit Classification Code"
+                                                ,@"PAB" : @"Permit Expiration Date"
+                                                ,@"PAC" : @"Permit Identifier"
+                                                ,@"PAD" : @"Permit IssueDate"
+                                                ,@"PAE" : @"Permit Restriction Code"
+                                                ,@"PAF" : @"Permit Endorsement Code"
+                                                ,@"ZVA" : @"Court Restriction Code"};
+    
+    return dict;
+}
 
 #pragma mark MotionServiceDelegate methods
 

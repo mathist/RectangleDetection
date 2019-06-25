@@ -58,7 +58,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="gu2-Tr-Ras">
-                            <rect key="frame" x="0.0" y="176" width="375" height="44"/>
+                            <rect key="frame" x="0.0" y="220" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
@@ -145,6 +145,26 @@
                                             <segue destination="SmY-9A-NKb" kind="show" id="AGx-2P-oa9"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="LtV-uM-Idt" style="IBUITableViewCellStyleDefault" id="YqS-Ku-rQa">
+                                        <rect key="frame" x="0.0" y="176" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YqS-Ku-rQa" id="hI3-Xg-VU6">
+                                            <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Selfie" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="LtV-uM-Idt">
+                                                    <rect key="frame" x="16" y="0.0" width="324" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="EbW-QS-QMN" kind="show" trigger="accessoryAction" id="gZZ-Vd-2kI"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -172,7 +192,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eNr-x1-HSy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1594" y="370"/>
+            <point key="canvasLocation" x="1081" y="312"/>
         </scene>
         <!--Rectangle Detection-->
         <scene sceneID="MnD-jC-JCh">
@@ -187,7 +207,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bNR-uV-cw0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1593" y="1084"/>
+            <point key="canvasLocation" x="1754" y="601"/>
         </scene>
         <!--ID Front-->
         <scene sceneID="TzS-wP-JDO">
@@ -228,7 +248,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dmn-r3-uKX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1588" y="1852"/>
+            <point key="canvasLocation" x="1753" y="1374"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="9LL-d6-gb1">
@@ -245,6 +265,21 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MOq-QG-ICK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-591" y="1174"/>
+        </scene>
+        <!--Selfie-->
+        <scene sceneID="0C6-Dp-hzx">
+            <objects>
+                <viewController title="Selfie" id="EbW-QS-QMN" customClass="SelfieViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="NS2-hx-oZD">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="Cmb-H2-Pm2"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DHX-Ie-R1r" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="319" y="2098"/>
         </scene>
         <!--ID Back-->
         <scene sceneID="QOo-jD-2iM">
@@ -276,7 +311,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vde-rd-IA1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="705" y="1999"/>
+            <point key="canvasLocation" x="1081" y="1839"/>
         </scene>
     </scenes>
 </document>

@@ -1,14 +1,14 @@
 //
-//  RectangleService.m
+//  FaceDetectionService.m
 //  RectangleDetection
 //
-//  Created by Todd Mathison on 6/12/19.
+//  Created by Todd Mathison on 6/24/19.
 //  Copyright © 2019 Todd Mathison. All rights reserved.
 //
 
-#import "RectangleService.h"
+#import "FaceDetectionService.h"
 
-@implementation RectangleService
+@implementation FaceDetectionService
 
 - (instancetype)init
 {
@@ -19,33 +19,30 @@
 
 -(void)dealloc
 {
-    NSLog(@"%@", @"RectangleService Dealloc");
+    NSLog(@"%@", @"FaceDetectionService Dealloc");
 }
 
--(void)request:(CMSampleBufferRef)sampleBuffer
+-(void)request:(CMSampleBufferRef)sampleBuffer;
 {
     CVImageBufferRef buffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-    
-    VNDetectRectanglesRequest *request = [[VNDetectRectanglesRequest alloc] initWithCompletionHandler:^(VNRequest * _Nonnull request , NSError * _Nullable error)
+
+    VNDetectFaceRectanglesRequest *request = [[VNDetectFaceRectanglesRequest alloc] initWithCompletionHandler:^(VNRequest * _Nonnull request , NSError * _Nullable error)
     {
         if (error)
         {
             NSLog(@"%@", error.localizedDescription);
             return;
         }
-      
-        if(request.results && request.results.count > 0 && self.delegate && [self.delegate respondsToSelector:@selector(rectanglesFound:)])
-            [self.delegate rectanglesFound:request.results];
-    }];
 
-    request.maximumObservations = 10;
-    request.minimumAspectRatio = 0.3;     //  default 0.5         max default = 1.0     min confidence = 0   quadratureTolerance = 30
-    
+        if(request.results && request.results.count > 0 && self.delegate && [self.delegate respondsToSelector:@selector(facesFound:)])
+            [self.delegate facesFound:request.results];
+    }];
+  
     VNImageRequestHandler *handler = [[VNImageRequestHandler alloc] initWithCVPixelBuffer:buffer orientation:kCGImagePropertyOrientationRight options:@{}];
     
     NSError *error;
     [handler performRequests:@[request] error:&error];
-
+    
     if (error)
     {
         NSLog(@"%@", error.localizedDescription);
@@ -60,5 +57,4 @@
     
     return newPoint;
 }
-
 @end

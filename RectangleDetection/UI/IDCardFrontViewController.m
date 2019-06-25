@@ -37,8 +37,8 @@
     self.captureVideoService = [[CaptureVideoService alloc] initWithImageCorrection:self.imageCorrection withOptions:kCaptureVideoServiceOptionOutput | kCaptureVideoServiceOptionPhoto];
     [self.captureVideoService setDelegate:self];
     self.rectangleService = [RectangleService new];
-    
     [self.rectangleService setDelegate:self];
+    
     [self.view.layer addSublayer:self.captureVideoService.captureLayer];
     
     //    [MotionService.shared setDelegate:self];
@@ -160,6 +160,13 @@
     
     //  @{(CIImageRepresentationOption)kCGImageDestinationLossyCompressionQuality: 1.0f}
     
+    //[[CIContext contextWithOptions:nil] JPEGRepresentationOfImage:<#(nonnull CIImage *)#> colorSpace:<#(nonnull CGColorSpaceRef)#> options:<#(nonnull NSDictionary<CIImageRepresentationOption,id> *)#>]
+    
+    
+//    CGColorSpaceRef cs = CGColorSpaceCreateCalibratedRGB(<#const CGFloat * _Nonnull whitePoint#>, <#const CGFloat * _Nullable blackPoint#>, <#const CGFloat * _Nullable gamma#>, <#const CGFloat * _Nullable matrix#>)
+    
+    
+    
     NSData *jpgData = [[CIContext contextWithOptions:nil] JPEGRepresentationOfImage:ciImage colorSpace:CGColorSpaceCreateDeviceRGB() options:@{(CIImageRepresentationOption)kCGImageDestinationLossyCompressionQuality: [NSNumber numberWithFloat:1.0f]}];
     UIImage *jpgImg = [UIImage imageWithData:jpgData];
     jpgImg = [jpgImg imageRotatedByDegrees:90];
@@ -167,7 +174,12 @@
     
 //    NSData *pngData = [[CIContext contextWithOptions:nil] PNGRepresentationOfImage:ciImage format:kCIFormatBGRA8 colorSpace:CGColorSpaceCreateDeviceRGB() options:@{}];
 //    UIImage *pngImg = [UIImage imageWithData:pngData scale:1.0];
-    
+////    pngImg = [pngImg imageRotatedByDegrees:90];
+//
+//
+//    NSData *jpgData = UIImageJPEGRepresentation(pngImg, 1.0);
+//    UIImage *jpgImg = [UIImage imageWithData:jpgData];
+//    jpgImg = [jpgImg imageRotatedByDegrees:90];
     
     [self.imgView setImage:jpgImg];
     [self.view bringSubviewToFront:self.imgView];
