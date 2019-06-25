@@ -9,6 +9,7 @@
 #import "MenuTableViewController.h"
 #import <Photos/Photos.h>
 #import <Photos/PHPhotoLibrary.h>
+#import "MotionService.h"
 
 @interface MenuTableViewController ()
 
@@ -20,6 +21,10 @@
 {
     [super viewDidLoad];
     
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        [MotionService.shared start];
+//    });
+
 }
 
 -(void)viewDidAppear:(BOOL)animated

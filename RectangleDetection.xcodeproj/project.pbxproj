@@ -27,6 +27,7 @@
 		A3A4736D22BB003300CD0049 /* CaptureVideoService.m in Sources */ = {isa = PBXBuildFile; fileRef = A3A4736C22BB003300CD0049 /* CaptureVideoService.m */; };
 		A3B4A74922C117D6007DBC39 /* SelfieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3B4A74822C117D6007DBC39 /* SelfieViewController.m */; };
 		A3B4A74C22C11B58007DBC39 /* FaceDetectionService.m in Sources */ = {isa = PBXBuildFile; fileRef = A3B4A74B22C11B58007DBC39 /* FaceDetectionService.m */; };
+		A3BC7B9B22C267D5008EA9E9 /* ActivityManagerService.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BC7B9A22C267D5008EA9E9 /* ActivityManagerService.m */; };
 		A3ECEFC022B6F69600E4F5F1 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3ECEFBF22B6F69600E4F5F1 /* Photos.framework */; };
 		A3ECEFC322B6F7E400E4F5F1 /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3ECEFC222B6F7E400E4F5F1 /* MenuTableViewController.m */; };
 		A3ECEFC622B7070300E4F5F1 /* IDCardFrontViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = A3ECEFC522B7070300E4F5F1 /* IDCardFrontViewController2.m */; };
@@ -72,6 +73,8 @@
 		A3B4A74822C117D6007DBC39 /* SelfieViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelfieViewController.m; sourceTree = "<group>"; };
 		A3B4A74A22C11B58007DBC39 /* FaceDetectionService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FaceDetectionService.h; sourceTree = "<group>"; };
 		A3B4A74B22C11B58007DBC39 /* FaceDetectionService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FaceDetectionService.m; sourceTree = "<group>"; };
+		A3BC7B9922C267D5008EA9E9 /* ActivityManagerService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActivityManagerService.h; sourceTree = "<group>"; };
+		A3BC7B9A22C267D5008EA9E9 /* ActivityManagerService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActivityManagerService.m; sourceTree = "<group>"; };
 		A3ECEFBF22B6F69600E4F5F1 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		A3ECEFC122B6F7E400E4F5F1 /* MenuTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuTableViewController.h; sourceTree = "<group>"; };
 		A3ECEFC222B6F7E400E4F5F1 /* MenuTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewController.m; sourceTree = "<group>"; };
@@ -150,6 +153,8 @@
 		A31F3F9522B170B20036BF8D /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A3BC7B9922C267D5008EA9E9 /* ActivityManagerService.h */,
+				A3BC7B9A22C267D5008EA9E9 /* ActivityManagerService.m */,
 				A3A4736B22BB003300CD0049 /* CaptureVideoService.h */,
 				A3A4736C22BB003300CD0049 /* CaptureVideoService.m */,
 				A3B4A74A22C11B58007DBC39 /* FaceDetectionService.h */,
@@ -268,6 +273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3BC7B9B22C267D5008EA9E9 /* ActivityManagerService.m in Sources */,
 				A3A4736A22BA7F7400CD0049 /* IDCardFrontViewController.m in Sources */,
 				A3ECEFC622B7070300E4F5F1 /* IDCardFrontViewController2.m in Sources */,
 				A31F3F9F22B17BE60036BF8D /* RectangleService.m in Sources */,
