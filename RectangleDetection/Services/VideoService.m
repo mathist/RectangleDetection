@@ -22,6 +22,17 @@
 
 @synthesize captureLayer;
 
+
+-(instancetype)initWithDevicePosition:(AVCaptureDevicePosition)devicePosition
+{
+    if (!(self = [super init])) return nil;
+    
+    [self setupService:devicePosition];
+    
+    return self;
+}
+
+
 - (instancetype)initWithImageCorrection:(ImageCorrection *)imageCorrection
 {
     if (!(self = [super init])) return nil;
@@ -77,7 +88,7 @@
     
     if ([self.captureDevice isFocusModeSupported:AVCaptureFocusModeAutoFocus] || [self.captureDevice isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus])
         [self.captureDevice addObserver:self forKeyPath:@"adjustingFocus" options:NSKeyValueObservingOptionNew context:nil];
-
+    
     if ([self.captureDevice isExposureModeSupported:AVCaptureExposureModeAutoExpose] || [self.captureDevice isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure])
         [self.captureDevice addObserver:self forKeyPath:@"adjustingExposure" options:NSKeyValueObservingOptionNew context:nil];
 
@@ -89,10 +100,16 @@
 {
     NSLog(@"%@", @"VideoService Dealloc");
     
-    [self.captureDevice removeObserver:self forKeyPath:@"adjustingFocus"];
-    [self.captureDevice removeObserver:self forKeyPath:@"adjustingExposure"];
-    [self.captureDevice removeObserver:self forKeyPath:@"adjustingWhiteBalance"];
+    if ([self.captureDevice isFocusModeSupported:AVCaptureFocusModeAutoFocus] || [self.captureDevice isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus])
+        [self.captureDevice removeObserver:self forKeyPath:@"adjustingFocus"];
+    
+    if ([self.captureDevice isExposureModeSupported:AVCaptureExposureModeAutoExpose] || [self.captureDevice isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure])
+        [self.captureDevice removeObserver:self forKeyPath:@"adjustingExposure"];
+    
+    if ([self.captureDevice isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeAutoWhiteBalance] || [self.captureDevice isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeContinuousAutoWhiteBalance])
+        [self.captureDevice removeObserver:self forKeyPath:@"adjustingWhiteBalance"];
 
+    
     for (AVCaptureInput *ci in self.captureSession.inputs)
         [self.captureSession removeInput:ci];
     

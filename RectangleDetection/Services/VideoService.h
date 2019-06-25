@@ -17,8 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *captureLayer;
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
 
+-(instancetype)initWithDevicePosition:(AVCaptureDevicePosition)devicePosition;
 -(instancetype)initWithImageCorrection:(ImageCorrection *)imageCorrection;
 -(instancetype)initWithImageCorrection:(ImageCorrection * _Nullable)imageCorrection withDevicePosition:(AVCaptureDevicePosition)devicePosition;
+
 -(void)startCamera;
 -(void)stopCamera;
 -(void)addOutput:(AVCaptureOutput *)output;

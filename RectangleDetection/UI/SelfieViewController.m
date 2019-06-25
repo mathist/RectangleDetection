@@ -92,8 +92,6 @@
 #pragma mark FaceDetectionServiceDelegate methods
 -(void)facesFound:(NSArray<VNFaceObservation *> *)faces
 {
-
-    
     dispatch_async(dispatch_get_main_queue(), ^{
         self.overlayLayer.sublayers = nil;
         
@@ -101,17 +99,15 @@
         
         for(VNFaceObservation *face in faces)
         {
-            CGPoint topLeft = face.boundingBox.origin;
-            CGPoint topRight = CGPointMake(face.boundingBox.origin.x + face.boundingBox.size.width, face.boundingBox.origin.y);
-            CGPoint bottomLeft = CGPointMake(face.boundingBox.origin.x, face.boundingBox.origin.y + face.boundingBox.size.height);
-            CGPoint bottomRight = CGPointMake(face.boundingBox.origin.x + face.boundingBox.size.width, face.boundingBox.origin.y + face.boundingBox.size.height);
-
-            topLeft = [self.faceDetectionService convertToUIView:topLeft forSize:size];
-            topRight = [self.faceDetectionService convertToUIView:topRight forSize:size];
-            bottomRight = [self.faceDetectionService convertToUIView:bottomRight forSize:size];
-            bottomLeft = [self.faceDetectionService convertToUIView:bottomLeft forSize:size];
+            CGFloat width = size.width * face.boundingBox.size.width;
+            CGFloat height = size.height * face.boundingBox.size.height;
+            CGFloat y = size.height - (size.height * face.boundingBox.origin.y) - height;
+            CGFloat x = size.width - (size.width * face.boundingBox.origin.x) - width;
             
-//            NSLog(@"%@", NSStringFromCGPoint(topLeft));
+            CGPoint topLeft = CGPointMake(x, y);
+            CGPoint topRight = CGPointMake(x + width, y);
+            CGPoint bottomLeft = CGPointMake(x, y+height);
+            CGPoint bottomRight = CGPointMake(x + width, y+height);
             
             UIBezierPath *path = [[UIBezierPath alloc] init];
             [path moveToPoint:topLeft];
@@ -119,12 +115,12 @@
             [path addLineToPoint:bottomRight];
             [path addLineToPoint:bottomLeft];
             [path addLineToPoint:topLeft];
-            
+
             CAShapeLayer *layer = [CAShapeLayer layer];
             [layer setPath:path.CGPath];
             [layer setFillRule:kCAFillRuleEvenOdd];
             [layer setFillColor:[UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.5].CGColor];
-            
+
             [self.overlayLayer addSublayer:layer];
         }
     });

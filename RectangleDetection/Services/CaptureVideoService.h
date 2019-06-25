@@ -25,6 +25,7 @@ typedef NS_ENUM (NSInteger, CaptureVideoServiceOption)
 
 @property(nonatomic, weak) id<CaptureVideoServiceDelegate> delegate;
 
+- (instancetype)initWithDevicePosition:(AVCaptureDevicePosition)devicePosition withOptions:(CaptureVideoServiceOption)options;
 - (instancetype)initWithOptions:(CaptureVideoServiceOption)options;
 - (instancetype)initWithImageCorrection:(ImageCorrection *)imageCorrection withOptions:(CaptureVideoServiceOption)options;
 - (instancetype)initWithImageCorrection:(ImageCorrection * _Nullable)imageCorrection withDevicePosition:(AVCaptureDevicePosition)devicePosition withOptions:(CaptureVideoServiceOption)options;

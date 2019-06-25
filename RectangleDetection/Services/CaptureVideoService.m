@@ -26,6 +26,16 @@
 @implementation CaptureVideoService
 
 
+- (instancetype)initWithDevicePosition:(AVCaptureDevicePosition)devicePosition withOptions:(CaptureVideoServiceOption)options
+{
+    self.options = options;
+    
+    if (!(self = [super initWithDevicePosition:devicePosition])) return nil;
+    
+    return self;
+}
+
+
 - (instancetype)initWithImageCorrection:(ImageCorrection *)imageCorrection withOptions:(CaptureVideoServiceOption)options
 {
     self.options = options;
