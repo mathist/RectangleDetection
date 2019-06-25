@@ -8,6 +8,7 @@
 
 #import "MotionService.h"
 #import <CoreMotion/CoreMotion.h>
+#import <UIKit/UIKit.h>
 
 @interface MotionService ()
 
@@ -50,8 +51,19 @@
 {
     if ([self.motionManager isDeviceMotionAvailable])
     {
+        [UIApplication.sharedApplication setNetworkActivityIndicatorVisible:YES];
+        [UIApplication.sharedApplication beginIgnoringInteractionEvents];
+        
         [self.motionManager startDeviceMotionUpdatesToQueue:self.motionQueue withHandler:^(CMDeviceMotion *motionData, NSError *error)
         {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (UIApplication.sharedApplication.isIgnoringInteractionEvents)
+                {
+                    [UIApplication.sharedApplication endIgnoringInteractionEvents];
+                    [UIApplication.sharedApplication setNetworkActivityIndicatorVisible:NO];
+                }
+            });
+
             if (!error && self.delegate && [self.delegate respondsToSelector:@selector((currentPitch:currentRoll:currentYaw:))])
                 [self.delegate currentPitch:motionData.attitude.pitch currentRoll:motionData.attitude.roll currentYaw:motionData.attitude.yaw];
         }];
