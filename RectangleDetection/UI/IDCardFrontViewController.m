@@ -166,17 +166,18 @@
 //    CGColorSpaceRef cs = CGColorSpaceCreateCalibratedRGB(<#const CGFloat * _Nonnull whitePoint#>, <#const CGFloat * _Nullable blackPoint#>, <#const CGFloat * _Nullable gamma#>, <#const CGFloat * _Nullable matrix#>)
     
     
-    
+    // test JPG
     NSData *jpgData = [[CIContext contextWithOptions:nil] JPEGRepresentationOfImage:ciImage colorSpace:CGColorSpaceCreateDeviceRGB() options:@{(CIImageRepresentationOption)kCGImageDestinationLossyCompressionQuality: [NSNumber numberWithFloat:1.0f]}];
-    UIImage *jpgImg = [UIImage imageWithData:jpgData];
+    UIImage *jpgImg = [UIImage imageWithData:jpgData scale:0.5];
     jpgImg = [jpgImg imageRotatedByDegrees:90];
     
     
-//    NSData *pngData = [[CIContext contextWithOptions:nil] PNGRepresentationOfImage:ciImage format:kCIFormatBGRA8 colorSpace:CGColorSpaceCreateDeviceRGB() options:@{}];
-//    UIImage *pngImg = [UIImage imageWithData:pngData scale:1.0];
-////    pngImg = [pngImg imageRotatedByDegrees:90];
+    NSData *pngData = [[CIContext contextWithOptions:nil] PNGRepresentationOfImage:ciImage format:kCIFormatBGRA8 colorSpace:CGColorSpaceCreateDeviceRGB() options:@{}];
+    UIImage *pngImg = [UIImage imageWithData:pngData scale:1.0];
+//    pngImg = [pngImg imageRotatedByDegrees:90];
 //
 //
+//    NSData *jpgData = UIImageJPEGRepresentation(pngImg, 1.0);
 //    NSData *jpgData = UIImageJPEGRepresentation(pngImg, 1.0);
 //    UIImage *jpgImg = [UIImage imageWithData:jpgData];
 //    jpgImg = [jpgImg imageRotatedByDegrees:90];
@@ -185,6 +186,7 @@
     [self.view bringSubviewToFront:self.imgView];
     
 //    UIImageWriteToSavedPhotosAlbum(jpgImg, nil, nil, nil);
+    UIImageWriteToSavedPhotosAlbum(pngImg, nil, nil, nil);
     UIImageWriteToSavedPhotosAlbum(jpgImg, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
 }
 
