@@ -24,6 +24,8 @@
 
 @property (nonatomic, assign) BOOL photoCaptured;
 @property (nonatomic, assign) CGRect boundingBox;
+
+@property (nonatomic, assign) int passedAllTestsCount;
 @end
 
 @implementation IDCardFrontViewController
@@ -41,7 +43,7 @@
     
     [self.view.layer addSublayer:self.captureVideoService.captureLayer];
     
-    //    [MotionService.shared setDelegate:self];
+    [MotionService.shared setDelegate:self];
     
     [self.view bringSubviewToFront:self.lblStatus];
 }
@@ -53,6 +55,8 @@
     self.rectangleService = nil;
     self.captureVideoService = nil;
     self.imageCorrection = nil;
+    
+    [MotionService.shared setDelegate:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -109,6 +113,11 @@
             
             if (self.imageCorrection.messages.count == 0)
             {
+                self.passedAllTestsCount++;
+                
+                if(self.passedAllTestsCount < 20)
+                    return;
+                
                 if (self.photoCaptured)
                 {
                     return;
@@ -118,6 +127,10 @@
                 self.boundingBox = result.boundingBox;
                 
                 [self.captureVideoService takePhoto];
+            }
+            else
+            {
+                self.passedAllTestsCount = 0;
             }
         }
     });
@@ -151,42 +164,14 @@
     
     ciImage = [ciImage imageByCroppingToRect:CGRectMake(x, y, width, height)];
     
-    NSLog(@"%@", @"hello");
-    
-    //CIImageRepresentationOption option = kCIImageRepresentationDepthImage
-    
-    //kCGImageDestinationLossyCompressionQuality
-    //kCGImageDestinationImageMaxPixelSize
-    
-    //  @{(CIImageRepresentationOption)kCGImageDestinationLossyCompressionQuality: 1.0f}
-    
-    //[[CIContext contextWithOptions:nil] JPEGRepresentationOfImage:<#(nonnull CIImage *)#> colorSpace:<#(nonnull CGColorSpaceRef)#> options:<#(nonnull NSDictionary<CIImageRepresentationOption,id> *)#>]
-    
-    
-//    CGColorSpaceRef cs = CGColorSpaceCreateCalibratedRGB(<#const CGFloat * _Nonnull whitePoint#>, <#const CGFloat * _Nullable blackPoint#>, <#const CGFloat * _Nullable gamma#>, <#const CGFloat * _Nullable matrix#>)
-    
-    
-    // test JPG
     NSData *jpgData = [[CIContext contextWithOptions:nil] JPEGRepresentationOfImage:ciImage colorSpace:CGColorSpaceCreateDeviceRGB() options:@{(CIImageRepresentationOption)kCGImageDestinationLossyCompressionQuality: [NSNumber numberWithFloat:1.0f]}];
     UIImage *jpgImg = [UIImage imageWithData:jpgData scale:0.5];
     jpgImg = [jpgImg imageRotatedByDegrees:90];
     
     
-    NSData *pngData = [[CIContext contextWithOptions:nil] PNGRepresentationOfImage:ciImage format:kCIFormatBGRA8 colorSpace:CGColorSpaceCreateDeviceRGB() options:@{}];
-    UIImage *pngImg = [UIImage imageWithData:pngData scale:1.0];
-//    pngImg = [pngImg imageRotatedByDegrees:90];
-//
-//
-//    NSData *jpgData = UIImageJPEGRepresentation(pngImg, 1.0);
-//    NSData *jpgData = UIImageJPEGRepresentation(pngImg, 1.0);
-//    UIImage *jpgImg = [UIImage imageWithData:jpgData];
-//    jpgImg = [jpgImg imageRotatedByDegrees:90];
-    
     [self.imgView setImage:jpgImg];
     [self.view bringSubviewToFront:self.imgView];
     
-//    UIImageWriteToSavedPhotosAlbum(jpgImg, nil, nil, nil);
-    UIImageWriteToSavedPhotosAlbum(pngImg, nil, nil, nil);
     UIImageWriteToSavedPhotosAlbum(jpgImg, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
 }
 
