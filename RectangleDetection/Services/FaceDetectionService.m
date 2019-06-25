@@ -54,7 +54,7 @@
     CGPoint newPoint = CGPointApplyAffineTransform(point, CGAffineTransformMakeScale(size.width, size.height));
     newPoint = CGPointApplyAffineTransform(newPoint, CGAffineTransformMakeTranslation(0, -size.height));
     newPoint = CGPointApplyAffineTransform(newPoint, CGAffineTransformMakeScale(1, -1));
-    
+
     return newPoint;
 }
 @end

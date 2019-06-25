@@ -34,22 +34,22 @@
     
     self.imageCorrection = [ImageCorrection new];
     [self.imageCorrection setDelegate:self];
-    
+
     self.captureVideoService = [[CaptureVideoService alloc] initWithImageCorrection:self.imageCorrection withDevicePosition:AVCaptureDevicePositionFront withOptions:kCaptureVideoServiceOptionPhoto | kCaptureVideoServiceOptionOutput];
-    
+
     [self.captureVideoService setDelegate:self];
-    
+
     self.faceDetectionService = [FaceDetectionService new];
     [self.faceDetectionService setDelegate:self];
 
 
     [self.view.layer addSublayer:self.captureVideoService.captureLayer];
-    
+
     //    [MotionService.shared setDelegate:self];
-    
+
     [self.view bringSubviewToFront:self.lblStatus];
-    
-    
+
+
     self.overlayLayer = [CALayer new];
     [self.view.layer addSublayer:self.overlayLayer];
 
@@ -110,6 +110,8 @@
             topRight = [self.faceDetectionService convertToUIView:topRight forSize:size];
             bottomRight = [self.faceDetectionService convertToUIView:bottomRight forSize:size];
             bottomLeft = [self.faceDetectionService convertToUIView:bottomLeft forSize:size];
+            
+//            NSLog(@"%@", NSStringFromCGPoint(topLeft));
             
             UIBezierPath *path = [[UIBezierPath alloc] init];
             [path moveToPoint:topLeft];

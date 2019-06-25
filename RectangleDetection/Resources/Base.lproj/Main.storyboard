@@ -162,7 +162,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="EbW-QS-QMN" kind="show" trigger="accessoryAction" id="gZZ-Vd-2kI"/>
+                                            <segue destination="EbW-QS-QMN" kind="show" id="Wbg-n0-syb"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
