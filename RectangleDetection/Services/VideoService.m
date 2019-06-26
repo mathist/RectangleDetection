@@ -69,6 +69,20 @@
     
     self.captureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:devicePosition];
     
+    NSError *configError;
+
+    if([self.captureDevice lockForConfiguration:&configError])
+    {
+        if(!configError)
+        {
+            [self.captureDevice setExposureModeCustomWithDuration:self.captureDevice.activeFormat.maxExposureDuration ISO:AVCaptureISOCurrent completionHandler:nil];
+            [self.captureDevice unlockForConfiguration];
+        }
+    }
+    
+    if ([self.captureDevice isLowLightBoostSupported])
+        [self.captureDevice setAutomaticallyEnablesLowLightBoostWhenAvailable:YES];
+    
     NSError *error;
     
     self.captureInput = [AVCaptureDeviceInput deviceInputWithDevice:self.captureDevice error:&error];

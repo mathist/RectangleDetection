@@ -123,6 +123,14 @@
 #pragma mark AVCaptureVideoDataOutputSampleBufferDelegate methods
 -(void)captureOutput:(AVCaptureOutput *)output didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
+//    CFDictionaryRef metadataDict = CMCopyDictionaryOfAttachments(NULL, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
+//    NSDictionary *metadata = [[NSMutableDictionary alloc] initWithDictionary:(__bridge NSDictionary*)metadataDict];
+//    CFRelease(metadataDict);
+//    NSDictionary *exifMetadata = [[metadata objectForKey:(NSString *)kCGImagePropertyExifDictionary] mutableCopy];
+//    float brightnessValue = [[exifMetadata objectForKey:(NSString *)kCGImagePropertyExifBrightnessValue] floatValue];
+//    
+//    NSLog(@"%f", brightnessValue);
+
     if(self.delegate && [self.delegate respondsToSelector:@selector(captureVideoServiceSampleBuffer:)])
         [self.delegate captureVideoServiceSampleBuffer:sampleBuffer];
 }

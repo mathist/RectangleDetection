@@ -16,6 +16,7 @@ static NSString *const kCentered = @"kCentered";
 static NSString *const kFocusing = @"kFocusing";
 static NSString *const kAdjustingExposure = @"kAdjustingExposure";
 static NSString *const kAdjustingColorBalance = @"kAdjustingColorBalance";
+static NSString *const kBrightness = @"kBrightness";
 
 static NSString *const kAlignmentMargin = @"kAlignmentMargin";
 

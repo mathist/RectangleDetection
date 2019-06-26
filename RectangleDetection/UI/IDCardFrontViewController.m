@@ -146,6 +146,19 @@
 #pragma mark CaptureVideoServiceDelegate methods
 -(void)captureVideoServiceSampleBuffer:(CMSampleBufferRef)sampleBuffer
 {
+    CFDictionaryRef metadataDict = CMCopyDictionaryOfAttachments(NULL, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
+    NSDictionary *metadata = [[NSMutableDictionary alloc] initWithDictionary:(__bridge NSDictionary*)metadataDict];
+    CFRelease(metadataDict);
+    NSDictionary *exifMetadata = [[metadata objectForKey:(NSString *)kCGImagePropertyExifDictionary] mutableCopy];
+    float brightnessValue = [[exifMetadata objectForKey:(NSString *)kCGImagePropertyExifBrightnessValue] floatValue];
+    
+    NSLog(@"%f", brightnessValue);
+
+    if(brightnessValue < 1.25)
+        [self.imageCorrection.correctionDictionary setObject:@"Need more light" forKey:kBrightness];
+    else
+        [self.imageCorrection.correctionDictionary setObject:@"" forKey:kBrightness];
+    
     [self.rectangleService request:sampleBuffer];
 }
 
@@ -167,6 +180,9 @@
     NSData *jpgData = [[CIContext contextWithOptions:nil] JPEGRepresentationOfImage:ciImage colorSpace:CGColorSpaceCreateDeviceRGB() options:@{(CIImageRepresentationOption)kCGImageDestinationLossyCompressionQuality: [NSNumber numberWithFloat:1.0f]}];
     UIImage *jpgImg = [UIImage imageWithData:jpgData scale:0.5];
     jpgImg = [jpgImg imageRotatedByDegrees:90];
+
+//    NSData *pngData = [[CIContext contextWithOptions:nil] PNGRepresentationOfImage:ciImage format:kCIFormatBGRA8 colorSpace:CGColorSpaceCreateDeviceRGB() options:@{}];
+//    UIImage *pngImg = [UIImage imageWithData:pngData scale:0.5];
     
     
     [self.imgView setImage:jpgImg];

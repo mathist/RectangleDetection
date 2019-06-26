@@ -20,7 +20,8 @@
                                   ,kFocusing:@""
                                   ,kAdjustingExposure:@""
                                   ,kAdjustingColorBalance:@""
-                                                      }];
+                                  ,kBrightness:@""
+                                }];
     
     [self.correctionDictionary addObserver:self forKeyPath:kRollMax options:NSKeyValueObservingOptionOld context:nil];
     [self.correctionDictionary addObserver:self forKeyPath:kRollMin options:NSKeyValueObservingOptionOld context:nil];
@@ -34,6 +35,7 @@
     [self.correctionDictionary addObserver:self forKeyPath:kFocusing options:NSKeyValueObservingOptionOld context:nil];
     [self.correctionDictionary addObserver:self forKeyPath:kAdjustingExposure options:NSKeyValueObservingOptionOld context:nil];
     [self.correctionDictionary addObserver:self forKeyPath:kAdjustingColorBalance options:NSKeyValueObservingOptionOld context:nil];
+    [self.correctionDictionary addObserver:self forKeyPath:kBrightness options:NSKeyValueObservingOptionOld context:nil];
 
     return self;
 }
@@ -54,6 +56,7 @@
     [self.correctionDictionary removeObserver:self forKeyPath:kFocusing];
     [self.correctionDictionary removeObserver:self forKeyPath:kAdjustingExposure];
     [self.correctionDictionary removeObserver:self forKeyPath:kAdjustingColorBalance];
+    [self.correctionDictionary removeObserver:self forKeyPath:kBrightness];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
