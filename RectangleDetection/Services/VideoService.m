@@ -62,12 +62,35 @@
     return self;
 }
 
+//- (void)configureCameraForHighestFrameRate:(AVCaptureDevice *)device
+//{
+//    AVCaptureDeviceFormat *bestFormat = nil;
+//    AVFrameRateRange *bestFrameRateRange = nil;
+//    for ( AVCaptureDeviceFormat *format in [device formats] ) {
+//        for ( AVFrameRateRange *range in format.videoSupportedFrameRateRanges ) {
+//            if ( range.maxFrameRate > bestFrameRateRange.maxFrameRate ) {
+//                bestFormat = format;
+//                bestFrameRateRange = range;
+//            }
+//        }
+//    }
+//    if ( bestFormat ) {
+//        if ( [device lockForConfiguration:NULL] == YES ) {
+//            device.activeFormat = bestFormat;
+//            device.activeVideoMinFrameDuration = bestFrameRateRange.minFrameDuration;
+//            device.activeVideoMaxFrameDuration = bestFrameRateRange.minFrameDuration;
+//            [device unlockForConfiguration];
+//        }
+//    }
+//}
+
 -(void)setupService:(AVCaptureDevicePosition)devicePosition
 {
     self.captureSession = [[AVCaptureSession alloc] init];
     [self.captureSession setSessionPreset:AVCaptureSessionPresetHigh];
     
     self.captureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:devicePosition];
+//    [self.captureDevice setActiveFormat:AVCaptureDeviceForm]
     
     NSError *configError;
 
@@ -123,7 +146,6 @@
     if ([self.captureDevice isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeAutoWhiteBalance] || [self.captureDevice isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeContinuousAutoWhiteBalance])
         [self.captureDevice removeObserver:self forKeyPath:@"adjustingWhiteBalance"];
 
-    
     for (AVCaptureInput *ci in self.captureSession.inputs)
         [self.captureSession removeInput:ci];
     
@@ -135,6 +157,7 @@
     self.captureInput = nil;
     self.captureDevice = nil;
     self.captureSession = nil;
+    self.captureLayer = nil;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

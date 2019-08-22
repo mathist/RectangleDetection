@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface VideoService : NSObject
 
-@property (nonatomic, strong) AVCaptureVideoPreviewLayer *captureLayer;
+@property (nonatomic, strong, nullable) AVCaptureVideoPreviewLayer *captureLayer;
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
 
 -(instancetype)initWithDevicePosition:(AVCaptureDevicePosition)devicePosition;

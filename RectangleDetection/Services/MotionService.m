@@ -39,6 +39,11 @@
     return self;
 }
 
+-(void)dealloc
+{
+    NSLog(@"%@", @"MotionService Dealloc");
+}
+
 -(void)stop
 {
     [self.motionManager stopDeviceMotionUpdates];
