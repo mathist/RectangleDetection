@@ -146,18 +146,18 @@
 #pragma mark CaptureVideoServiceDelegate methods
 -(void)captureVideoServiceSampleBuffer:(CMSampleBufferRef)sampleBuffer
 {
-    CFDictionaryRef metadataDict = CMCopyDictionaryOfAttachments(NULL, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
-    NSDictionary *metadata = [[NSMutableDictionary alloc] initWithDictionary:(__bridge NSDictionary*)metadataDict];
-    CFRelease(metadataDict);
-    NSDictionary *exifMetadata = [[metadata objectForKey:(NSString *)kCGImagePropertyExifDictionary] mutableCopy];
-    float brightnessValue = [[exifMetadata objectForKey:(NSString *)kCGImagePropertyExifBrightnessValue] floatValue];
-    
-    NSLog(@"%f", brightnessValue);
-
-    if(brightnessValue < 1.25)
-        [self.imageCorrection.correctionDictionary setObject:@"Need more light" forKey:kBrightness];
-    else
-        [self.imageCorrection.correctionDictionary setObject:@"" forKey:kBrightness];
+//    CFDictionaryRef metadataDict = CMCopyDictionaryOfAttachments(NULL, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
+//    NSDictionary *metadata = [[NSMutableDictionary alloc] initWithDictionary:(__bridge NSDictionary*)metadataDict];
+//    CFRelease(metadataDict);
+//    NSDictionary *exifMetadata = [[metadata objectForKey:(NSString *)kCGImagePropertyExifDictionary] mutableCopy];
+//    float brightnessValue = [[exifMetadata objectForKey:(NSString *)kCGImagePropertyExifBrightnessValue] floatValue];
+//    
+//    NSLog(@"%f", brightnessValue);
+//
+//    if(brightnessValue < 1.25)
+//        [self.imageCorrection.correctionDictionary setObject:@"Need more light" forKey:kBrightness];
+//    else
+//        [self.imageCorrection.correctionDictionary setObject:@"" forKey:kBrightness];
     
     [self.rectangleService request:sampleBuffer];
 }
