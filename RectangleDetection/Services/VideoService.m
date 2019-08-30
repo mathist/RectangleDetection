@@ -92,16 +92,16 @@
     self.captureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:devicePosition];
 //    [self.captureDevice setActiveFormat:AVCaptureDeviceForm]
     
-    NSError *configError;
-
-    if([self.captureDevice lockForConfiguration:&configError])
-    {
-        if(!configError)
-        {
-            [self.captureDevice setExposureModeCustomWithDuration:self.captureDevice.activeFormat.maxExposureDuration ISO:AVCaptureISOCurrent completionHandler:nil];
-            [self.captureDevice unlockForConfiguration];
-        }
-    }
+//    NSError *configError;
+//
+//    if([self.captureDevice lockForConfiguration:&configError])
+//    {
+//        if(!configError)
+//        {
+//            [self.captureDevice setExposureModeCustomWithDuration:self.captureDevice.activeFormat.maxExposureDuration ISO:AVCaptureISOCurrent completionHandler:nil];
+//            [self.captureDevice unlockForConfiguration];
+//        }
+//    }
     
     if ([self.captureDevice isLowLightBoostSupported])
         [self.captureDevice setAutomaticallyEnablesLowLightBoostWhenAvailable:YES];
