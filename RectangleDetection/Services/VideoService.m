@@ -146,14 +146,9 @@
     if ([self.captureDevice isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeAutoWhiteBalance] || [self.captureDevice isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeContinuousAutoWhiteBalance])
         [self.captureDevice removeObserver:self forKeyPath:@"adjustingWhiteBalance"];
 
-    for (AVCaptureInput *ci in self.captureSession.inputs)
-        [self.captureSession removeInput:ci];
-    
-    for (AVCaptureOutput *co in self.captureSession.outputs)
-        [self.captureSession removeOutput:co];
+    [self.captureSession removeInput:self.captureInput];
     
     self.imageCorrection = nil;
-    
     self.captureInput = nil;
     self.captureDevice = nil;
     self.captureSession = nil;

@@ -132,7 +132,7 @@
         [photoSettings setFlashMode:AVCaptureFlashModeOff];
         [photoSettings setAutoStillImageStabilizationEnabled:NO];
         
-//        [self.captureSession setSessionPreset:AVCaptureSessionPresetPhoto];
+        [self.captureSession setSessionPreset:AVCaptureSessionPresetPhoto];
 
         [self.capturePhotoOutput capturePhotoWithSettings:photoSettings delegate:self];
     }
@@ -157,7 +157,7 @@
 
 -(void)captureOutput:(AVCapturePhotoOutput *)output didFinishProcessingPhoto:(AVCapturePhoto *)photo error:(NSError *)error
 {
-//    [self.captureSession setSessionPreset:AVCaptureSessionPresetHigh];
+    [self.captureSession setSessionPreset:AVCaptureSessionPresetHigh];
     
     if(!error && self.delegate && [self.delegate respondsToSelector:@selector(captureVideoServicePhotoOutput:didFinishProcessingPhoto:)])
         [self.delegate captureVideoServicePhotoOutput:output didFinishProcessingPhoto:photo];
