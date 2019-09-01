@@ -284,18 +284,18 @@
                                     <action selector="readText:" destination="ayj-mx-SdD" eventType="touchUpInside" id="XfK-Xs-Ex6"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Afr-sz-eFO">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Afr-sz-eFO">
                                 <rect key="frame" x="16" y="208" width="343" height="443"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4CU-XK-oBC">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="238" placeholderIntrinsicHeight="128" translatesAutoresizingMaskIntoConstraints="NO" id="4CU-XK-oBC">
                                 <rect key="frame" x="121" y="64" width="238" height="128"/>
+                                <color key="backgroundColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="R3r-pS-vzl"/>
+                                    <constraint firstAttribute="height" constant="128" id="9cg-sF-cNi"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -311,6 +311,7 @@
                             <constraint firstItem="CqZ-Dq-FvX" firstAttribute="trailing" secondItem="4CU-XK-oBC" secondAttribute="trailing" constant="16" id="cYU-8A-rxg"/>
                             <constraint firstItem="GOm-aM-vbd" firstAttribute="top" secondItem="rVa-er-rNx" secondAttribute="bottom" constant="8" id="fg2-Pc-KOB"/>
                             <constraint firstItem="CqZ-Dq-FvX" firstAttribute="bottom" secondItem="Afr-sz-eFO" secondAttribute="bottom" constant="16" id="iZ5-9u-4cU"/>
+                            <constraint firstItem="Afr-sz-eFO" firstAttribute="top" relation="greaterThanOrEqual" secondItem="GOm-aM-vbd" secondAttribute="bottom" constant="20" id="j00-N2-Olu"/>
                             <constraint firstItem="CqZ-Dq-FvX" firstAttribute="trailing" secondItem="Afr-sz-eFO" secondAttribute="trailing" constant="16" id="jnv-Fd-Xtn"/>
                             <constraint firstItem="rVa-er-rNx" firstAttribute="leading" secondItem="CqZ-Dq-FvX" secondAttribute="leading" constant="16" id="pHo-tl-WWo"/>
                         </constraints>
@@ -318,6 +319,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Text Reader" id="FT0-iB-Tzo"/>
                     <connections>
+                        <outlet property="imgHeight" destination="9cg-sF-cNi" id="8ZZ-Wv-21c"/>
                         <outlet property="imgView" destination="4CU-XK-oBC" id="s0s-g5-gH8"/>
                         <outlet property="txtView" destination="Afr-sz-eFO" id="J4P-iV-SIA"/>
                     </connections>

@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol TextReadingServiceDelegate <NSObject>
 
-//-(void)textFound:(NSArray <VNRecognizedTextObservation *>*) texts;
+-(void)textFound:(NSArray <VNRecognizedTextObservation *>*) texts API_AVAILABLE(ios(13.0));
 
 @end
 
